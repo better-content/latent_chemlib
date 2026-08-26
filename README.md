@@ -54,9 +54,8 @@ ChemLib registry data.
 - Java `17`
 - Kotlin for Forge `4.11.0`
 - Create `6.0.8`
-- Create: New Age `1.1.7f`
 - ChemLib `2.0.19`
-- Alchemistry `2.3.4`
+- Heat Sync (mandatory typed thermal API)
 - PneumaticCraft: Repressurized `6.0.22`
 - EMI and JEI as optional client integrations
 
@@ -117,4 +116,4 @@ For modpack and mod discussion, playtest feedback, and bug reports, join the [Be
 
 ## Identity
 
-The canonical identity is repository/artifact `latent-chemlib`, mod ID and resource namespace `latent_chemlib`, and Maven group `com.bettercontent`. Heat integrations depend optionally on Latent's read-only emission API; Latent has no Heat Sync loader or binary dependency.
+The canonical identity is repository/artifact `latent-chemlib`, mod ID and resource namespace `latent_chemlib`, and Maven group `com.bettercontent`. Latent has a mandatory loader and typed binary dependency on Heat Sync, which owns the pack's thermal transport API; other consumers may use Latent's read-only emission API.
