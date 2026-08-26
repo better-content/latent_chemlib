@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.zip.ZipFile
 
 plugins {
     idea
@@ -225,7 +226,35 @@ tasks.named<JavaCompile>("compileJava") {
     // MixinGradle does not declare this annotation-processor sidecar itself.
     // Tracking it prevents an incremental release build from reusing classes
     // after the refmap has disappeared and silently producing an unusable JAR.
-    outputs.file(layout.buildDirectory.file("tmp/compileJava/latent_chemlib.refmap.json"))
+    outputs.file(layout.buildDirectory.file("tmp/compileJava/compileJava-refmap.json"))
+}
+
+val verifyRuntimeJar by tasks.registering {
+    group = "verification"
+    description = "Rejects a release JAR whose production mixins cannot be remapped."
+    dependsOn(stageRuntimeJar)
+
+    val runtimeJar = layout.buildDirectory.file("libs/${base.archivesName.get()}-$version.jar")
+    inputs.file(runtimeJar)
+
+    doLast {
+        val jarFile = runtimeJar.get().asFile
+        ZipFile(jarFile).use { zip ->
+            val mixinConfig = zip.getEntry("latent_chemlib.mixins.json")
+                ?: throw GradleException("Runtime JAR is missing latent_chemlib.mixins.json: $jarFile")
+            val mixinConfigText = zip.getInputStream(mixinConfig).bufferedReader().use { it.readText() }
+            check(mixinConfigText.contains("\"refmap\": \"latent_chemlib.refmap.json\"")) {
+                "Runtime mixin config does not declare latent_chemlib.refmap.json: $jarFile"
+            }
+
+            val refmap = zip.getEntry("latent_chemlib.refmap.json")
+                ?: throw GradleException("Runtime JAR is missing latent_chemlib.refmap.json: $jarFile")
+            val refmapText = zip.getInputStream(refmap).bufferedReader().use { it.readText() }
+            check(refmapText.contains("RadioactiveItemEntityMixin") && refmapText.contains("m_6469_")) {
+                "Runtime refmap lacks the production mapping for RadioactiveItemEntityMixin.hurt: $jarFile"
+            }
+        }
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -309,4 +338,5 @@ tasks.register("verifyFull") {
     description = "Runs the full verification lane, including headless Forge GameTests."
     dependsOn(tasks.named("verifyFast"))
     dependsOn(tasks.named("headlessGameTest"))
+    dependsOn(verifyRuntimeJar)
 }
