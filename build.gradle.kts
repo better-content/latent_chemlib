@@ -34,6 +34,8 @@ val modAuthors = property("mod_authors") as String
 val modDescription = property("mod_description") as String
 val modLicense = property("mod_license") as String
 val modIssueTrackerUrl = property("mod_issue_tracker_url") as String
+val packArtifactCache = providers.environmentVariable("BC_PACKAGE_ARTIFACT_CACHE")
+    .orElse("${System.getProperty("user.home")}/.cache/bc/packwiz-downloads")
 
 group = property("mod_group") as String
 version = modVersion
@@ -112,7 +114,7 @@ repositories {
     maven("https://maven.blamejared.com")
     flatDir {
         dirs(
-            "../../better-content/generated/cache/packwiz-downloads/mods",
+            "${packArtifactCache.get()}/mods",
             "../heat-sync/build/libs"
         )
     }
