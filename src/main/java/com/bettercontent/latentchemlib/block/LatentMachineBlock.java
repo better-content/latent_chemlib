@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+@SuppressWarnings("deprecation")
 public class LatentMachineBlock extends BaseEntityBlock {
     public LatentMachineBlock(Properties properties) {
         super(properties);

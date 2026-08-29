@@ -114,7 +114,7 @@ public final class AdpotherGasBoundary {
         if ("sulfur".equals(path)) return "chemlib:sulfur_dioxide";
         if ("dust".equals(path)) return "latent_chemlib:dust";
 
-        ResourceLocation chemicalId = new ResourceLocation("chemlib", path);
+        ResourceLocation chemicalId = ResourceLocation.fromNamespaceAndPath("chemlib", path);
         if (ForgeRegistries.ITEMS.getValue(chemicalId) instanceof Chemical chemical
             && chemical.getMatterState() == MatterState.GAS) {
             return chemicalId.toString();

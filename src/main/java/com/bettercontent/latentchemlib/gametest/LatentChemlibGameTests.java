@@ -95,7 +95,7 @@ public final class LatentChemlibGameTests {
         BlockPos boundaryPos = new BlockPos(1, 1, 1);
         BlockPos pressureTubePos = boundaryPos.east();
         LatentMachineBlockEntity boundary = placeMachine(helper, boundaryPos, LatentChemlibMod.PNEUMATIC_CHEMICAL_TUBE.get());
-        Block pressureTube = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("pneumaticcraft", "pressure_tube"));
+        Block pressureTube = ForgeRegistries.BLOCKS.getValue(ResourceLocation.fromNamespaceAndPath("pneumaticcraft", "pressure_tube"));
         helper.assertTrue(pressureTube != null && pressureTube != Blocks.AIR, "PNCR pressure tube must be registered");
         helper.setBlock(pressureTubePos, pressureTube);
         boundary.pneumaticAirHandler().addAir(2_000);
@@ -343,7 +343,7 @@ public final class LatentChemlibGameTests {
         BlockPos chestPos = new BlockPos(1, 1, 1);
         helper.setBlock(chestPos, Blocks.CHEST);
         ChestBlockEntity chest = (ChestBlockEntity) helper.getBlockEntity(chestPos);
-        chest.setItem(0, new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib", "carbon_dioxide"))));
+        chest.setItem(0, new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath("chemlib", "carbon_dioxide"))));
 
         helper.runAfterDelay(21, () -> {
             helper.assertTrue(chest.getItem(0).isEmpty(), "Loose gas must leave block inventories within 20 ticks");
@@ -387,7 +387,7 @@ public final class LatentChemlibGameTests {
 
     @GameTest(templateNamespace = "minecraft", template = "empty", batch = "nuclearPhenomena", timeoutTicks = 80)
     public static void configuredRadioactiveChemLibStackSurvivesAndAdvectsInLava(GameTestHelper helper) {
-        ItemStack bismuth = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("chemlib", "bismuth")));
+        ItemStack bismuth = new ItemStack(ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath("chemlib", "bismuth")));
         helper.assertTrue(!bismuth.isEmpty(), "Configured radioactive ChemLib bismuth must be registered");
         BlockPos lavaPos = new BlockPos(2, 2, 2);
         helper.setBlock(lavaPos.below(), Blocks.STONE);

@@ -65,8 +65,8 @@ public class LatentChemlibMod {
                 DRY_AIR_SEPARATOR.get()
             ).build(null));
 
-    public LatentChemlibMod() {
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public LatentChemlibMod(FMLJavaModLoadingContext loadingContext) {
+        IEventBus modBus = loadingContext.getModEventBus();
         BLOCKS.register(modBus);
         ITEMS.register(modBus);
         BLOCK_ENTITIES.register(modBus);

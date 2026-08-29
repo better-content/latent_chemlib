@@ -195,16 +195,12 @@ tasks.matching { it.name == "prepareRunGameTestServer" }.configureEach {
 }
 
 tasks.named<Jar>("jar") {
-    finalizedBy("reobfJar")
-}
-
-// MixinGradle adds the generated refmap in its own finalizer. Reobfuscate only
-// after that finalizer has updated the JAR, otherwise the staged runtime JAR
-// lacks the refmap needed to resolve named mixin targets in production.
-tasks.configureEach {
-    if (name == "reobfJar") {
-        dependsOn("addMixinsToJar")
+    dependsOn(tasks.named("compileJava"))
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(layout.buildDirectory.file("tmp/compileJava/compileJava-refmap.json")) {
+        rename { "latent_chemlib.refmap.json" }
     }
+    finalizedBy("reobfJar")
 }
 
 val stageRuntimeJar by tasks.registering(Copy::class) {

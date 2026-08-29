@@ -42,7 +42,7 @@ public final class GasFluidCodec {
         } else {
             return Optional.empty();
         }
-        ResourceLocation itemId = new ResourceLocation("chemlib", chemicalPath);
+        ResourceLocation itemId = ResourceLocation.fromNamespaceAndPath("chemlib", chemicalPath);
         Item item = ForgeRegistries.ITEMS.getValue(itemId);
         return item instanceof Chemical chemical && GasEscapeHandler.canEscapeAsGas(chemical)
             ? Optional.of(itemId.toString())
@@ -54,7 +54,7 @@ public final class GasFluidCodec {
         if (id == null || !"chemlib".equals(id.getNamespace())) return Optional.empty();
         Item item = ForgeRegistries.ITEMS.getValue(id);
         if (!(item instanceof Chemical chemical) || !GasEscapeHandler.canEscapeAsGas(chemical)) return Optional.empty();
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(id.getNamespace(), id.getPath() + "_fluid"));
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_fluid"));
         return fluid == null || fluid == Fluids.EMPTY ? Optional.empty() : Optional.of(fluid);
     }
 
