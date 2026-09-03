@@ -338,6 +338,17 @@ public final class LatentChemlibGameTests {
         helper.succeed();
     }
 
+    @GameTest(templateNamespace = "minecraft", template = "empty", timeoutTicks = 40)
+    public static void ordinaryLiquidPlacementRemainsUntouched(GameTestHelper helper) {
+        BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, Blocks.WATER);
+        helper.assertTrue(
+            helper.getLevel().getFluidState(helper.absolutePos(pos)).isSourceOfType(Fluids.WATER),
+            "Ordinary water must bypass gas-fluid conversion"
+        );
+        helper.succeed();
+    }
+
     @GameTest(templateNamespace = "minecraft", template = "empty", timeoutTicks = 60)
     public static void blockInventoryGasEscapesWithinTwentyTicks(GameTestHelper helper) {
         BlockPos chestPos = new BlockPos(1, 1, 1);

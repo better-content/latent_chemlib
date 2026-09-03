@@ -1,6 +1,7 @@
 package com.bettercontent.latentchemlib.mixin;
 
 import com.bettercontent.latentchemlib.sim.GasEscapeHandler;
+import com.bettercontent.latentchemlib.sim.GasFluidCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -25,6 +26,10 @@ public abstract class LiquidBlockGasificationMixin {
         boolean movedByPiston,
         CallbackInfo callback
     ) {
+        // onPlace can run while a newly generated chunk is still completing its load.
+        // Do not query the level for ordinary liquids here: resolving that position can
+        // synchronously request the same chunk and recursively re-enter chunk finalizers.
+        if (!GasFluidCodec.isGasFluid(state.getFluidState().getType())) return;
         if (!(level instanceof ServerLevel serverLevel)) return;
         if (GasEscapeHandler.gasifyFluidBlock(serverLevel, pos)) callback.cancel();
     }
